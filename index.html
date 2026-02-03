@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Will You Be My Valentine? 💖</title>
+    
+    <!-- Dependencies: Loaded from CDN so it works in any browser instantly -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Romantic Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            margin: 0;
+            background-color: #fff5f7;
+            overflow-x: hidden;
+        }
+        .font-romantic {
+            font-family: 'Dancing Script', cursive;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        .heart-particle {
+            position: fixed;
+            bottom: -50px;
+            pointer-events: none;
+            animation: float linear infinite;
+            z-index: 0;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.4",
+    "react/": "https://esm.sh/react@^19.2.4/"
+  }
+}
+</script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- This script is 'text/babel' so the browser knows to compile the JSX inside it -->
+    <script type="text/babel">
+        const { useState, useEffect, useCallback, useMemo } = React;
+
+        const FloatingHearts = ({ count = 25 }) => {
+            const hearts = useMemo(() => Array.from({ length: count }), [count]);
+            return (
+                <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                    {hearts.map((_, i) => {
+                        const size = Math.random() * 30 + 10;
+                        const left = Math.random() * 100;
+                        const duration = Math.random() * 10 + 5;
+                        const delay = Math.random() * 10;
+                        return (
+                            <div key={i} className="heart-particle text-pink-400"
+                                style={{
+                                    left: `${left}%`,
+                                    width: `${size}px`,
+                                    height: `${size}px`,
+                                    animationDuration: `${duration}s`,
+                                    animationDelay: `-${delay}s`,
+                                    opacity: Math.random() * 0.4 + 0.1,
+                                }}>
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        };
+
+        const GiftDisplay = ({ type }) => {
+            const [visible, setVisible] = useState(false);
+            const [typedText, setTypedText] = useState('');
+            const loveLetterText = "Dearest Valentine,\n\nEvery moment spent with you feels like a dream I never want to wake up from. Your smile brightens my darkest days, and your laughter is the sweetest melody I've ever heard.\n\nYou are my best friend, my soulmate, and my greatest adventure. Thank you for being you.\n\nAlways yours, \nAntariksh 💖";
+
+            useEffect(() => {
+                setVisible(false);
+                const timer = setTimeout(() => setVisible(true), 100);
+                if (type === 'letter') {
+                    setTypedText('');
+                    let i = 0;
+                    const interval = setInterval(() => {
+                        setTypedText(loveLetterText.slice(0, i));
+                        i++;
+                        if (i > loveLetterText.length) clearInterval(interval);
+                    }, 40);
+                    return () => {
+                        clearInterval(interval);
+                        clearTimeout(timer);
+                    };
+                }
+                return () => clearTimeout(timer);
+            }, [type]);
+
+            if (type === 'flowers') return (
+                <div className={`flex flex-col items-center gap-6 p-10 bg-white/90 rounded-[2.5rem] shadow-2xl transition-all duration-1000 transform ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                    <img src="https://i.pinimg.com/736x/b5/52/e3/b552e37d4864108a86d9096630f6fa4d.jpg" className="w-full max-w-[300px] rounded-3xl border-8 border-white shadow-lg" />
+                    <p className="text-gray-700 italic text-lg max-w-md">"This Virtual Bouquet is for you. Thank you for the way you care and the comfort you bring into my life. I love you. You are my EVERYTHING."</p>
+                </div>
+            );
+
+            if (type === 'letter') return (
+                <div className={`p-10 bg-white rounded-[2.5rem] shadow-2xl transition-all duration-1000 transform ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                    <div className="font-romantic text-2xl text-pink-800 bg-rose-50/50 p-8 rounded-3xl border border-pink-100 shadow-inner whitespace-pre-wrap text-left">
+                        {typedText}<span className="animate-pulse w-2 h-6 bg-pink-400 ml-1 inline-block"></span>
+                    </div>
+                </div>
+            );
+
+            if (type === 'photos') return (
+                <div className={`p-10 bg-white/90 rounded-[2.5rem] shadow-2xl transition-all duration-1000 transform ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {[
+                            "https://i.im.ge/2026/02/03/eackMz.7B5E8EDF-DCCC-41DF-AAB8-32F0F4D7F783.jpeg",
+                            "https://i.im.ge/2026/02/03/eaczI6.IMG-4748.png",
+                            "https://i.im.ge/2026/02/03/eacHxF.IMG-4763.png",
+                            "https://i.im.ge/2026/02/03/eacpJK.IMG-4764.png",
+                            "https://i.im.ge/2026/02/03/eacJd9.IMG-4967.jpeg",
+                            "https://i.im.ge/2026/02/03/eacV8S.IMG-4966.jpeg"
+                        ].map((url, idx) => (
+                            <div key={idx} className={`p-2 bg-white shadow-md rounded-lg transform ${idx % 2 === 0 ? 'rotate-2' : '-rotate-2'} hover:rotate-0 transition-transform hover:scale-110`}>
+                                <img src={url} className="w-full aspect-square object-cover rounded-md" />
+                            </div>
+                        ))}
+                    </div>
+                    <p className="text-pink-600 font-romantic text-2xl mt-6">Every moment with you is a treasure...</p>
+                </div>
+            );
+            return null;
+        };
+
+        const App = () => {
+            const [hasAccepted, setHasAccepted] = useState(false);
+            const [selectedGift, setSelectedGift] = useState(null);
+            const [noButtonPos, setNoButtonPos] = useState({ x: 0, y: 0 });
+            const [isMoved, setIsMoved] = useState(false);
+
+            const moveNoButton = () => {
+                setNoButtonPos({ x: (Math.random() - 0.5) * 300, y: (Math.random() - 0.5) * 300 });
+                setIsMoved(true);
+            };
+
+            return (
+                <div className="min-h-screen w-full relative bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center p-4">
+                    <FloatingHearts />
+                    
+                    {!hasAccepted ? (
+                        <div className="z-10 text-center fade-in flex flex-col items-center">
+                            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpwaG54NmZpYjB4ZGFsMWhzMTF3YmN4NTVvNnJ0bTZ6N3ByNWU4ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" className="w-48 h-48 mb-8" />
+                            <h1 className="text-5xl md:text-7xl font-romantic text-pink-600 mb-12">Will you be my Valentine?</h1>
+                            <div className="flex flex-col sm:flex-row gap-8 relative">
+                                <button onClick={() => setHasAccepted(true)} className="bg-pink-500 text-white font-bold py-4 px-14 rounded-full shadow-xl hover:scale-110 transition-transform text-xl z-20">YES 💖</button>
+                                <button onMouseEnter={moveNoButton} onClick={moveNoButton} className="bg-white text-gray-700 font-bold py-4 px-14 rounded-full shadow-md text-xl border-2 border-pink-200 transition-all duration-300 z-10" style={{ transform: isMoved ? `translate(${noButtonPos.x}px, ${noButtonPos.y}px)` : 'none' }}>NO 😌</button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="z-10 w-full max-w-3xl text-center fade-in">
+                            <img src="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyd2RuOWpqbXBmZzRjYW5mbDZzZnRlZGJsajN5cHptYWp6OHpxY2tkciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eOiQcyyualRls3iaYe/giphy.gif" className="w-56 h-56 mx-auto mb-6" />
+                            <h2 className="text-5xl md:text-7xl font-romantic text-pink-600 mb-12">Yay! I knew it! 💖</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12 max-w-2xl mx-auto">
+                                {['flowers', 'letter', 'photos'].map((id, i) => (
+                                    <button key={id} onClick={() => setSelectedGift(id)} className={`p-8 bg-white rounded-[2rem] shadow-sm border-2 transition-all hover:-translate-y-2 hover:shadow-xl flex flex-col items-center gap-3 ${selectedGift === id ? 'border-pink-400 bg-pink-50' : 'border-transparent'}`}>
+                                        <span className="text-6xl animate-bounce">🎁</span>
+                                        <span className="font-bold text-pink-700 uppercase text-xs">Gift {i+1}</span>
+                                    </button>
+                                ))}
+                            </div>
+                            {selectedGift && <GiftDisplay type={selectedGift} />}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
